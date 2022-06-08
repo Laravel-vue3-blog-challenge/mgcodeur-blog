@@ -14,15 +14,19 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
             "name" => "required",
             "email" => "required|email|unique:users",
-            "password" => "required"
+            "password" => "required|confirmed"
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors());
         }
 
-        $user = User::create($request->all());
+        $user = new User;
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
 
         return response()->json($user);
-    } 
+    }
 }
