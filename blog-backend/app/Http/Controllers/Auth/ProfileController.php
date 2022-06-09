@@ -44,7 +44,6 @@ class ProfileController extends Controller
      */
     public function profile(){
         $user = auth()->user();
-
         return response()->json($user);
     }
 }
