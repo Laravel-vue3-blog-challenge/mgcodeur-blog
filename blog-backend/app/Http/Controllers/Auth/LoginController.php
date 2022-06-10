@@ -3,18 +3,28 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Repositories\AuthRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    private AuthRepository $authRepository;
+
+    /**
+     * @param AuthRepository $authRepository
+     */
+    public function __construct(AuthRepository $authRepository){
+        $this->authRepository = $authRepository;
+    }
+
     /**
      * @OA\Post(
-     ** path="/api/v1/auth/login",
+     *   path="/api/v1/auth/login",
      *   tags={"Auth"},
      *   summary="Login",
      *   operationId="login",
-     *
      *   @OA\Parameter(
      *      name="email",
      *      in="query",
@@ -50,34 +60,15 @@ class LoginController extends Controller
      *      response=404,
      *      description="not found"
      *   ),
-     *      @OA\Response(
-     *          response=403,
-     *          description="Forbidden"
-     *      )
+     *   @OA\Response(
+     *      response=403,
+     *      description="Forbidden"
+     *   )
      *)
      **/
-    public function login(Request $request){
-        $validator = Validator::make($request->all(), [
-            "email" => "required|email",
-            "password" => "required"
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors());
-        }
-
-        if(!auth()->attempt($request->only(["email", "password"]))){
-            return response()->json([
-                "message" => "Invalid Crédentials"
-            ]);
-        }
-
-        $token = auth()->user()->createToken('auth_token')->accessToken;
-
-        return response()->json([
-            "message" => "Logged In successfully",
-            "token" => $token
-        ]);
+    public function login(LoginRequest $request){
+        $token = $this->authRepository->login($request->only(["email", "password"]));
+        return response()->json(["token" => $token]);
     }
 
     public function logout(){
