@@ -66,12 +66,51 @@ class LoginController extends Controller
      *   )
      *)
      **/
-    public function login(LoginRequest $request){
+    public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
+    {
         $token = $this->authRepository->login($request->only(["email", "password"]));
         return response()->json(["token" => $token]);
     }
 
-    public function logout(){
-
+    /**
+     * @OA\Post(
+     *   path="/api/v1/auth/logout",
+     *   tags={"Auth"},
+     *   security={
+     *    {"passport": {}},
+     *   },
+     *   summary="Logout",
+     *   operationId="logout",
+     *   @OA\Response(
+     *      response=200,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *   @OA\Response(
+     *      response=403,
+     *      description="Forbidden"
+     *   )
+     *)
+     **/
+    public function logout(): \Illuminate\Http\JsonResponse
+    {
+        $this->authRepository->logout();
+        return response()->json([
+            "message" => "User logged out successfully"
+        ]);
     }
 }

@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Repositories\AuthRepository;
 
 class ProfileController extends Controller
 {
+    private AuthRepository $authRepository;
+
+    /**
+     * @param AuthRepository $authRepository
+     */
+    public function __construct(AuthRepository $authRepository){
+        $this->authRepository = $authRepository;
+    }
     /**
      * @OA\Get(
      *      path="/api/v1/auth/profile",
@@ -43,7 +52,6 @@ class ProfileController extends Controller
      *  )
      */
     public function profile(){
-        $user = auth()->user();
-        return response()->json($user);
+        return response()->json($this->authRepository->getProfile());
     }
 }

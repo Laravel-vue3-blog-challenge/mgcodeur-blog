@@ -17,4 +17,12 @@ class AuthRepository implements AuthRepositoryInterface
 
         return auth()->user()->createToken('auth_token')->accessToken;
     }
+
+    public function logout(){
+        return auth()->user()->token()->revoke();
+    }
+
+    public function getProfile(){
+        return auth()->user();
+    }
 }
