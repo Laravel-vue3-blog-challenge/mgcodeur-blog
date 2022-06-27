@@ -1,15 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Repositories\AuthRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Auth\RegisterRequest;
 
 class RegisterController extends Controller
 {
+    private AuthRepository $authRepository;
+
+    /**
+     * @param AuthRepository $authRepository
+     */
+    public function __construct(AuthRepository $authRepository){
+        $this->authRepository = $authRepository;
+    }
     /**
      * @OA\Post(
      ** path="/api/v1/auth/register",
@@ -74,23 +84,8 @@ class RegisterController extends Controller
      *      )
      *)
      **/
-    public function register(Request $request){
-        $validator = Validator::make($request->all(), [
-            "name" => "required",
-            "email" => "required|email|unique:users",
-            "password" => "required|confirmed"
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors());
-        }
-
-        $user = new User;
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
-
+    public function register(RegisterRequest $request){
+        $user = $this->authRepository->register($request->only(["name", "email", "password"]));
         return response()->json($user);
     }
 }

@@ -2,14 +2,33 @@
 
 namespace App\Repositories;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Interfaces\AuthRepositoryInterface;
 
 class AuthRepository implements AuthRepositoryInterface
 {
+    public function register(array $request){
+        
+        $user = new User;
 
-    public function login(array $request)
+        foreach ($request as $key => $value) {
+            if($key !== "password"){
+                $user->$key = $request[$key];
+            }
+        }
+        
+        $user->password = Hash::make($request["password"]);
+        $user->save();
+
+        $user->sendEmailVerificationNotification();
+
+        return $user;
+    }
+
+    public function login(array $credentials)
     {
-        if(!auth()->attempt($request)){
+        if(!auth()->attempt($credentials)){
             return response()->json([
                 "message" => "Invalid credentials"
             ]);
