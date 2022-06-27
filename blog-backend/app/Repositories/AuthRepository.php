@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Jobs\Auth\SendEmailVerificationMessage;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
@@ -28,9 +27,6 @@ class AuthRepository implements AuthRepositoryInterface
 
         $user->password = Hash::make($request["password"]);
         $user->save();
-
-        //TODO: bring this line in observer
-        SendEmailVerificationMessage::dispatch($user);
 
         return $user;
     }
