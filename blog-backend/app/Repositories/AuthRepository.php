@@ -39,7 +39,7 @@ class AuthRepository implements AuthRepositoryInterface
      * @param array $credentials
      * @return JsonResponse
      */
-    public function login(array $credentials): JsonResponse
+    public function login(array $credentials)
     {
         if(!auth()->attempt($credentials)){
             return response()->json([
