@@ -37,7 +37,7 @@ class RegisterRequest extends FormRequest
         return [
             "required" => "Le champ :attribute est requis!",
             "email" => "L'adresse email est invalide!",
-            "unique" => "Le champs :attribute existe déjà!"
+            "unique" => "L'adresse email existe déjà!"
         ];
     }
 
