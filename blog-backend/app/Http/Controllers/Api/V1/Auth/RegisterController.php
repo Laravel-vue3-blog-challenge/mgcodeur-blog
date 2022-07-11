@@ -82,6 +82,8 @@ class RegisterController extends Controller
      **/
     public function register(RegisterRequest $request){
         $user = $this->authRepository->register($request->only(["name", "email", "password"]));
-        return response()->json($user);
+        return response()->json([
+            "data" => $user
+        ]);
     }
 }

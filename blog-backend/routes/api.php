@@ -23,4 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
  */
 Route::prefix('v1')->group(function(){
     require_once("api/v1/auth.php");
+
+    require_once("api/v1/category.php");
 });

@@ -40,7 +40,9 @@ class AuthRepository implements AuthRepositoryInterface
     {
         if(!auth()->attempt($credentials)){
             return response()->json([
-                "message" => "Invalid credentials"
+                "errors" => [
+                    "message" => "Invalid credentials"
+                ]
             ]);
         }
 

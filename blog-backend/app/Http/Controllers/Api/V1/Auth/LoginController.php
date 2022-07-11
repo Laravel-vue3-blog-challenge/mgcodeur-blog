@@ -67,7 +67,11 @@ class LoginController extends Controller
     public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
         $token = $this->authRepository->login($request->only(["email", "password"]));
-        return response()->json(["token" => $token]);
+        return response()->json([
+            "data" => [
+                "token" => $token
+            ]
+        ]);
     }
 
     /**

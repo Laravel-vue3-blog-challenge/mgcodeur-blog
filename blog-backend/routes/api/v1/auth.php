@@ -14,8 +14,6 @@ Route::prefix('auth')->group(function(){
          */
         Route::get('profile', [\App\Http\Controllers\Api\V1\Auth\ProfileController::class, 'profile']);
         Route::post('logout', [\App\Http\Controllers\Api\V1\Auth\LoginController::class, 'logout']);
-
-        
     });
 
     /**

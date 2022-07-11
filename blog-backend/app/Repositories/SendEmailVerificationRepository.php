@@ -19,7 +19,11 @@ class SendEmailVerificationRepository implements SendEmailVerificationRepository
     public function verify($user_id, Request $request): JsonResponse|bool
     {
         if (!$request->hasValidSignature()) {
-            return response()->json(["message" => "Invalid/Expired url provided."], 401);
+            return response()->json([
+                "errors" => [
+                    "message" => "Invalid/Expired url provided."
+                ]
+            ], 401);
         }
 
         $user = User::findOrFail($user_id);
@@ -37,7 +41,11 @@ class SendEmailVerificationRepository implements SendEmailVerificationRepository
     public function resend(): JsonResponse|bool
     {
         if (auth()->user()->hasVerifiedEmail()) {
-            return response()->json(["message" => "Email already verified."], 400);
+            return response()->json([
+                "errors" => [
+                    "message" => "Email already verified."
+                ]
+            ], 400);
         }
 
         SendEmailVerificationMessage::dispatch(auth()->user());
