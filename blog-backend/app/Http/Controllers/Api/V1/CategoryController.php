@@ -6,10 +6,18 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
+use App\Repositories\CategoryRepository;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Category\CategoryRequest;
 
 class CategoryController extends Controller
 {
+    private CategoryRepository $category_repository;
+
+    public function __construct(CategoryRepository $category_repository){
+        $this->category_repository = $category_repository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,8 +25,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::whereNull('parent_id')->with('categories')->get();
-        return CategoryResource::collection($categories);
+        return $this->category_repository->all();
     }
 
     /**
@@ -27,25 +34,9 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            "name" => "required|min:2",
-            "parent_id" => "exists:categories,id"
-        ]);
-
-        if($validator->fails()){
-            return response()->json([
-                "errors" => $validator->errors()
-            ]);
-        }
-
-        $category = Category::create($request->all()); 
-
-        return (new CategoryResource($category))
-        ->additional([
-            "message" => "Category created successfully"
-        ]);
+        return $this->category_repository->store($request);
     }
 
     /**
@@ -56,17 +47,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category = Category::with('categories')->find($id);
-        if($category){
-            return new CategoryResource($category);
-        }
-        else{
-            return response()->json([
-                "errors" => [
-                    "message" => "Category not found!"
-                ]
-            ], 400);
-        }
+        return $this->category_repository->show($id); 
     }
 
 
@@ -77,35 +58,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            "name" => "required|min:2",
-            "parent_id" => "exists:categories,id"
-        ]);
-
-        if($validator->fails()){
-            return response()->json([
-                "errors" => [
-                    "message" => $validator->errors()
-                ]
-            ]);
-        }
-
-        $category = Category::find($id);
-
-        if($category){
-            $category->update($request->all());
-        }
-        else{
-            return response()->json([
-                "errors" => [
-                    "message" => "Category not found!"
-                ]
-            ]);
-        }
-
-        return (new CategoryResource($category))->additional(["message" => "Category updated successfully!"]);
+        return $this->category_repository->update($request, $id);
     }
 
     /**
@@ -116,18 +71,6 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::find($id);
-        if($category){
-            $category->delete();
-        }
-        else{
-            return response()->json([
-                "errors" => [
-                    "message" => "Category not found!"
-                ]
-            ], 400);
-        }
-
-        return (new CategoryResource($category))->additional(["message" => "Category deleted successfully"]);
+        return $this->category_repository->destroy($id);
     }
 }
