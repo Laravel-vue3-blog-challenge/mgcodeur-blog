@@ -28,8 +28,39 @@ class EmailVerificationController extends Controller
     }
 
     /**
-     * resend the email verification if user doesn't receive the email
-     * @return JsonResponse
+     * @OA\Get(
+     *      path="/api/v1/auth/email/resend",
+     *      operationId="resend",
+     *      tags={"Auth"},
+     *      security={
+     *          {"passport": {}},
+     *      },
+     *      summary="Resend",
+     *      description="Resend email verification of current user",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *  )
      */
     public function resend(): JsonResponse
     {
