@@ -2,22 +2,29 @@
 namespace App\Repositories;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
 use App\Http\Resources\CategoryResource;
-use App\Http\Requests\Category\CategoryRequest;
 use App\Interfaces\EloquentRepositoryInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryRepository implements EloquentRepositoryInterface
 {
-    private $category;
-
-    public function all(){
+    /**
+     * @return AnonymousResourceCollection
+     */
+    public function all(): AnonymousResourceCollection
+    {
         $categories = Category::whereNull('parent_id')->with('categories')->get();
         return CategoryResource::collection($categories);
     }
 
-    public function store($request){
-        $category = Category::create($request->all()); 
+    /**
+     * @param $request
+     * @return CategoryResource
+     */
+    public function store($request): CategoryResource
+    {
+        $category = Category::create($request->all());
 
         return (new CategoryResource($category))
         ->additional([
@@ -25,50 +32,60 @@ class CategoryRepository implements EloquentRepositoryInterface
         ]);
     }
 
-    public function update($request, $id){
+    /**
+     * @param $request
+     * @param $id
+     * @return CategoryResource|JsonResponse
+     */
+    public function update($request, $id): CategoryResource|JsonResponse
+    {
         $category = Category::find($id);
-
-        if($category){
-            $category->update($request->all());
-        }
-        else{
+        if(!$category){
             return response()->json([
                 "errors" => [
                     "message" => "Category not found!"
                 ]
-            ]);
+            ], 404);
         }
-
-        return (new CategoryResource($category))->additional(["message" => "Category updated successfully!"]);
+        $category->update($request->all());
+        return (new CategoryResource($category))
+            ->additional(["message" => "Category updated successfully!"]);
     }
 
-    public function destroy($id){
+    /**
+     * @param $id
+     * @return CategoryResource|JsonResponse
+     */
+    public function destroy($id): CategoryResource|JsonResponse
+    {
         $category = Category::find($id);
-        if($category){
-            $category->delete();
-        }
-        else{
+        if(!$category){
             return response()->json([
                 "errors" => [
                     "message" => "Category not found!"
                 ]
-            ], 400);
+            ], 404);
         }
+        $category->delete();
 
-        return (new CategoryResource($category))->additional(["message" => "Category deleted successfully"]);
+        return (new CategoryResource($category))
+            ->additional(["message" => "Category deleted successfully"]);
     }
 
-    public function show($id){
+    /**
+     * @param $id
+     * @return CategoryResource|JsonResponse
+     */
+    public function show($id): CategoryResource|JsonResponse
+    {
         $category = Category::with('categories')->find($id);
-        if($category){
-            return new CategoryResource($category);
-        }
-        else{
+        if(!$category){
             return response()->json([
                 "errors" => [
                     "message" => "Category not found!"
                 ]
-            ], 400);
+            ], 404);
         }
+        return new CategoryResource($category);
     }
 }

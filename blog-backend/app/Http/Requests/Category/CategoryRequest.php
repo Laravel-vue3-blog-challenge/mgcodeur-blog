@@ -12,7 +12,7 @@ class CategoryRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             "name" => "required|min:2",
@@ -22,15 +22,19 @@ class CategoryRequest extends FormRequest
 
     /**
      * @param Validator $validator
+     * @return void
      */
-    public function failedValidation(Validator $validator)
+    public function failedValidation(Validator $validator): void
     {
         throw new HttpResponseException(response()->json([
             'errors' => $validator->errors()
         ], 401));
     }
 
-    public function messages()
+    /**
+     * @return array<string, mixed>
+     */
+    public function messages(): array
     {
         return [
             "required" => "Le champ :attribute est requis!",
@@ -38,6 +42,9 @@ class CategoryRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function attributes(): array
     {
         return [
