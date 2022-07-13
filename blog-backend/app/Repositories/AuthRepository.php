@@ -33,12 +33,12 @@ class AuthRepository implements AuthRepositoryInterface
 
     /**
      * login an existing user
-     * @param array $credentials
+     * @param array $request
      * @return JsonResponse
      */
-    public function login(array $credentials)
+    public function login(array $request): JsonResponse
     {
-        if(!auth()->attempt($credentials)){
+        if(!auth()->attempt($request)){
             return response()->json([
                 "errors" => [
                     "message" => "Invalid credentials"
