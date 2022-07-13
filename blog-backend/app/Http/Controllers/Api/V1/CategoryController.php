@@ -25,7 +25,39 @@ class CategoryController extends Controller
     }
 
     /**
-     * @return AnonymousResourceCollection
+     * @OA\Get(
+     *      path="/api/v1/categories",
+     *      operationId="index",
+     *      tags={"Categories"},
+     *      security={
+     *          {"passport": {}},
+     *      },
+     *      summary="categories lists",
+     *      description="Get lists of categories",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     * @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     * @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *  )
      */
     public function index() : AnonymousResourceCollection
     {
@@ -33,45 +65,213 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     ** path="/api/v1/categories",
+     *   tags={"Categories"},
+     *   security={
+     *      {"passport": {}},
+     *   },
+     *   summary="store category",
+     *   operationId="store",
      *
-     * @param CategoryRequest $request
-     * @return CategoryResource
-     */
+     *  @OA\Parameter(
+     *      name="name",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *  @OA\Parameter(
+     *      name="parent_id",
+     *      in="query",
+     *      required=false,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=201,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *)
+     **/
     public function store(CategoryRequest $request) : CategoryResource
     {
         return $this->category_repository->store($request);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return CategoryResource|JsonResponse
-     */
+     * @OA\Get(
+     ** path="/api/v1/categories/{id}",
+     *   tags={"Categories"},
+     *   security={
+     *      {"passport": {}},
+     *   },
+     *   summary="Show a category",
+     *   operationId="show",
+     *  @OA\Parameter(
+     *      name="id",
+     *      in="path",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=201,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *   @OA\Response(
+     *      response=403,
+     *      description="Forbidden"
+     *   )
+     *)
+     **/
     public function show(int $id) : CategoryResource|JsonResponse
     {
         return $this->category_repository->show($id);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param CategoryRequest $request
-     * @param int $id
-     * @return CategoryResource|JsonResponse
-     */
+     * @OA\Put(
+     ** path="/api/v1/categories/{id}",
+     *   tags={"Categories"},
+     *   security={
+     *      {"passport": {}},
+     *   },
+     *   summary="Update category",
+     *   operationId="update",
+     *  @OA\Parameter(
+     *      name="id",
+     *      in="path",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *  @OA\Parameter(
+     *      name="name",
+     *      in="query",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *  @OA\Parameter(
+     *      name="parent_id",
+     *      in="query",
+     *      required=false,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=201,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *)
+     **/
     public function update(CategoryRequest $request, int $id) : CategoryResource|JsonResponse
     {
         return $this->category_repository->update($request, $id);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return CategoryResource|JsonResponse
-     */
+     * @OA\Delete(
+     ** path="/api/v1/categories/{id}",
+     *   tags={"Categories"},
+     *   security={
+     *      {"passport": {}},
+     *   },
+     *   summary="Delete a category",
+     *   operationId="destroy",
+     *  @OA\Parameter(
+     *      name="id",
+     *      in="path",
+     *      required=true,
+     *      @OA\Schema(
+     *           type="string"
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=201,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *   @OA\Response(
+     *      response=403,
+     *      description="Forbidden"
+     *   )
+     *)
+     **/
     public function destroy(int $id) : CategoryResource|JsonResponse
     {
         return $this->category_repository->destroy($id);
