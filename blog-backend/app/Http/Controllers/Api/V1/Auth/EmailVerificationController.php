@@ -23,8 +23,7 @@ class EmailVerificationController extends Controller
      */
     public function verify($user_id, Request $request): JsonResponse
     {
-        $this->verifyEmailRepository->verify($user_id, $request);
-        return response()->json(["message" => "L'utilisateur a bien été vérifié!"]);
+        return $this->verifyEmailRepository->verify($user_id, $request);
     }
 
     /**
@@ -64,7 +63,6 @@ class EmailVerificationController extends Controller
      */
     public function resend(): JsonResponse
     {
-        $this->verifyEmailRepository->resend();
-        return response()->json(["message" => "Email verification link sent on your email id"]);
+        return $this->verifyEmailRepository->resend();
     }
 }

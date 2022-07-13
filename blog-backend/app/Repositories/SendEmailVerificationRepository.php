@@ -32,7 +32,7 @@ class SendEmailVerificationRepository implements SendEmailVerificationRepository
             $user->markEmailAsVerified();
         }
 
-        return true;
+        return response()->json(["message" => "L'utilisateur a bien été vérifié!"]);
     }
 
     /**
@@ -50,6 +50,6 @@ class SendEmailVerificationRepository implements SendEmailVerificationRepository
 
         SendEmailVerificationMessage::dispatch(auth()->user());
 
-        return true;
+        return response()->json(["message" => "Email verification link sent on your email id"]);
     }
 }
