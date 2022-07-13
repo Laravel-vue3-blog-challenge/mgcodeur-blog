@@ -13,9 +13,9 @@ class AuthRepository implements AuthRepositoryInterface
     /**
      * register new user
      * @param array $request
-     * @return User
+     * @return JsonResponse
      */
-    public function register(array $request): User
+    public function register(array $request): JsonResponse
     {
         $user = new User;
 
@@ -28,7 +28,9 @@ class AuthRepository implements AuthRepositoryInterface
         $user->password = Hash::make($request["password"]);
         $user->save();
 
-        return $user;
+        return response()->json([
+            "data" => $user
+        ]);
     }
 
     /**
