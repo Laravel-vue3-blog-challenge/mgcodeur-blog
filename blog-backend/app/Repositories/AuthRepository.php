@@ -46,7 +46,13 @@ class AuthRepository implements AuthRepositoryInterface
             ]);
         }
 
-        return auth()->user()->createToken('auth_token')->accessToken;
+        $token = auth()->user()->createToken('auth_token')->accessToken;
+
+        return response()->json([
+            "data" => [
+                "token" => $token
+            ]
+        ]);
     }
 
     /**
