@@ -66,10 +66,12 @@ class AuthRepository implements AuthRepositoryInterface
 
     /**
      * get profile of connected user
-     * @return Authenticatable|null
+     * @return JsonResponse
      */
-    public function getProfile(): ?Authenticatable
+    public function getProfile(): JsonResponse
     {
-        return auth()->user();
+        return response()->json([
+            "data" => auth()->user()
+        ]);
     }
 }

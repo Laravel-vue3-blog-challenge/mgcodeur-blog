@@ -51,8 +51,6 @@ class ProfileController extends Controller
      *  )
      */
     public function profile(){
-        return response()->json([
-            "data" => $this->authRepository->getProfile()
-        ]);
+        return $this->authRepository->getProfile();
     }
 }
